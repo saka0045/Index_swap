@@ -7,8 +7,8 @@ Created on Tue Feb  6 10:29:13 2018
 """
 
 # open files
-vcfFile = open('practice.vcf', 'r')
-outFile = open('gnomAD.vcf', 'w')
+vcfFile = open('/Users/m006703/Index_Swap/files/practice.vcf', 'r')
+outFile = open('/Users/m006703/Index_Swap/files/gnomAD.vcf', 'w')
 
 # Go to the header line
 for line in vcfFile:
@@ -41,23 +41,22 @@ for line in vcfFile:
 # Replace item in info list with only gnomAD results    
 index = 0    
 while (index < (len(info))):
-    gnomADList = []
-    if 'gnomAD' in info[index]:
+    if 'gnomAD_r201_GRCh37.INFO.AF=' in info[index]:
         eachinfoList = info[index].split(';')
         for item in eachinfoList:
-            if item.startswith('gnomAD'):
-                gnomADList.append(item)
+            if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
+                gnomADInfo = item
     else:
-        gnomADList = ['NA']
-    info[index] = gnomADList
+        gnomADInfo = 'NA'
+    info[index] = gnomADInfo
     index += 1
                    
-outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n')
+outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\n')
 
 index = 0
 while (index < (len(chrom))):
     resultList = []
-    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], ';'.join(info[index])]
+    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], info[index]]
     outFile.write('\t'.join(resultList) + '\n')
     index += 1
 
