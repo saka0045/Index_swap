@@ -6,8 +6,11 @@ Created on Tue Feb  6 10:29:13 2018
 @author: m006703
 """
 
+import gzip
+
 # open files
-vcfFile = open('/Users/m006703/Index_Swap/files/practice.vcf', 'r')
+vcfFile = gzip.open('/Users/m006703/Index_Swap/files/practice.vcf', 'rb')
+#vcfFile = open('/Users/m006703/Index_Swap/files/practice.vcf', 'r')
 outFile = open('/Users/m006703/Index_Swap/files/gnomAD.vcf', 'w')
 
 # Go to the header line
@@ -34,16 +37,17 @@ for line in vcfFile:
         splitinfoline = infoline.split(';')
         for item in splitinfoline:
             if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
-                gnomADInfo = float(item.split('=')[1]) 
-                chrom.append(result[0])
-                pos.append(result[1])
-                snpid.append(result[2])
-                ref.append(result[3])
-                alt.append(result[4])
-                qual.append(result[5])
-                qualfilter.append(result[6])
-                info.append(gnomADInfo)
-                resultformat.append(result[8])
+                gnomADInfo = float(item.split('=')[1])
+                if gnomADInfo <= 0.01:
+                    chrom.append(result[0])
+                    pos.append(result[1])
+                    snpid.append(result[2])
+                    ref.append(result[3])
+                    alt.append(result[4])
+                    qual.append(result[5])
+                    qualfilter.append(result[6])
+                    info.append(gnomADInfo)
+                    resultformat.append(result[8])
                    
 outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\n')
 
