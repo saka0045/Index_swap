@@ -38,27 +38,23 @@ for line in vcfFile:
     info.append(result[7])
     resultformat.append(result[8])
 
-# Replace item in info list with only gnomAD results    
-index = 0    
-while (index < (len(info))):
+# Replace item in info list with only gnomAD results      
+for index in range(len(info)):
     if 'gnomAD_r201_GRCh37.INFO.AF=' in info[index]:
         eachinfoList = info[index].split(';')
         for item in eachinfoList:
             if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
-                gnomADInfo = item
+                gnomADInfo = float(item.split('=')[1])
     else:
         gnomADInfo = 'NA'
     info[index] = gnomADInfo
-    index += 1
                    
 outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\n')
 
-index = 0
-while (index < (len(chrom))):
+for index in range(len(chrom)):
     resultList = []
-    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], info[index]]
+    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], str(info[index])]
     outFile.write('\t'.join(resultList) + '\n')
-    index += 1
 
 vcfFile.close()
 outFile.close()
