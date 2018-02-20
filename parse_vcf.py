@@ -16,7 +16,7 @@ vcfFile = gzip.open('/Users/m006703/Index_Swap/files/practice.vcf', 'rb')
 for line in vcfFile:
     if line.startswith('#CHROM'):
         firstline = line.split('\t')
-        sampleName = firstline[9]
+        sampleName = firstline[9].rstrip()
         
 outFile = open('/Users/m006703/Index_Swap/files/' + sampleName + 'gnomAD.vcf', 'w')
         
