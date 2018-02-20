@@ -11,12 +11,14 @@ import gzip
 # open files
 vcfFile = gzip.open('/Users/m006703/Index_Swap/files/practice.vcf', 'rb')
 #vcfFile = open('/Users/m006703/Index_Swap/files/practice.vcf', 'r')
-outFile = open('/Users/m006703/Index_Swap/files/gnomAD.vcf', 'w')
 
 # Go to the header line
 for line in vcfFile:
     if line.startswith('#CHROM'):
-                       break
+        firstline = line.split('\t')
+        sampleName = firstline[9]
+        
+outFile = open('/Users/m006703/Index_Swap/files/' + sampleName + 'gnomAD.vcf', 'w')
         
 # Start collecting data after the header line           
 chrom = []
@@ -38,7 +40,7 @@ for line in vcfFile:
         for item in splitinfoline:
             if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
                 gnomADInfo = float(item.split('=')[1])
-                if gnomADInfo <= 0.01:
+                if gnomADInfo <= 0.01: # Adjust this to change cutoff
                     chrom.append(result[0])
                     pos.append(result[1])
                     snpid.append(result[2])
