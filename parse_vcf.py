@@ -26,28 +26,24 @@ qualfilter = []
 info = []
 resultformat = []
 
+# Collect data that only has value for non-population specific gnomAD frequency
 for line in vcfFile:
     result = line.split('\t')
-    chrom.append(result[0])
-    pos.append(result[1])
-    snpid.append(result[2])
-    ref.append(result[3])
-    alt.append(result[4])
-    qual.append(result[5])
-    qualfilter.append(result[6])
-    info.append(result[7])
-    resultformat.append(result[8])
-
-# Replace item in info list with only gnomAD results      
-for index in range(len(info)):
-    if 'gnomAD_r201_GRCh37.INFO.AF=' in info[index]:
-        eachinfoList = info[index].split(';')
-        for item in eachinfoList:
+    infoline = result[7]
+    if 'gnomAD_r201_GRCh37.INFO.AF=' in infoline:
+        splitinfoline = infoline.split(';')
+        for item in splitinfoline:
             if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
-                gnomADInfo = float(item.split('=')[1])
-    else:
-        gnomADInfo = 'NA'
-    info[index] = gnomADInfo
+                gnomADInfo = float(item.split('=')[1]) 
+                chrom.append(result[0])
+                pos.append(result[1])
+                snpid.append(result[2])
+                ref.append(result[3])
+                alt.append(result[4])
+                qual.append(result[5])
+                qualfilter.append(result[6])
+                info.append(gnomADInfo)
+                resultformat.append(result[8])
                    
 outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\n')
 
