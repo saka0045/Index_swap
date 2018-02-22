@@ -9,7 +9,7 @@ Created on Tue Feb  6 10:29:13 2018
 import gzip
 
 # open files
-vcfFile = gzip.open('/Users/m006703/Index_Swap/files/practice.vcf', 'rb')
+vcfFile = gzip.open('/dlmp/sandbox/runs/WESPP/NGS26-WESPP_F137035_NS0001_NS0001_H2YF5DMXX/samples/WESPP-NA12878-CTRL/ggps_results/OUTPUT/PI/exome/WESPP-NA12878-CTRL/variants/variants.vcf.gz.bior_annotate.vcf.gz', 'rb')
 #vcfFile = open('/Users/m006703/Index_Swap/files/practice.vcf', 'r')
 
 # Go to the header line
@@ -17,8 +17,9 @@ for line in vcfFile:
     if line.startswith('#CHROM'):
         firstline = line.split('\t')
         sampleName = firstline[9].rstrip()
+	break
         
-outFile = open('/Users/m006703/Index_Swap/files/' + sampleName + 'gnomAD.vcf', 'w')
+outFile = open('/dlmp/sandbox/cgslIS/Yuta/Index_Swap/files/' + sampleName + '_gnomAD.vcf', 'w')
         
 # Start collecting data after the header line           
 chrom = []
@@ -40,7 +41,7 @@ for line in vcfFile:
         for item in splitinfoline:
             if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
                 gnomADInfo = float(item.split('=')[1])
-                if gnomADInfo <= 0.01: # Adjust this to change cutoff
+                if 0 < gnomADInfo <= 0.001: # Adjust this to change cutoff
                     chrom.append(result[0])
                     pos.append(result[1])
                     snpid.append(result[2])
