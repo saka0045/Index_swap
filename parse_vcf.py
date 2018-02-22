@@ -52,11 +52,11 @@ for line in vcfFile:
                     info.append(gnomADInfo)
                     resultformat.append(result[8])
                    
-outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\n')
+outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\tFORMAT\n')
 
 for index in range(len(chrom)):
     resultList = []
-    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], str(info[index])]
+    resultList = [chrom[index], pos[index], ref[index], alt[index], qual[index], qualfilter[index], str(info[index]), resultformat[index]]
     outFile.write('\t'.join(resultList) + '\n')
 
 vcfFile.close()
