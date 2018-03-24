@@ -23,6 +23,7 @@ coverageList = []
 # Parse out frequency and coverage information from all files
 for file in fileList:
     filePath = basedir + file
+    print("Processing file: " + filePath)
     openFile = open(filePath, 'r')
     openFile.readline()
     for line in openFile:
@@ -36,12 +37,13 @@ for file in fileList:
 
 # Create result directory inside basedir if it doesn't exist
 if not os.path.exists(basedir + 'result/'):
+    print("result directory does not exist in " + basedir + ", creating directory...")
     os.makedirs(basedir + 'result/')    
 
 # Creating empty files based on the frequency cutoff    
-FivePercentCoverageList = open(basedir + 'result/5PercentCoverageList' , 'w')
-OnePercentCoverageList = open(basedir + 'result/1PercentCoverageList', 'w')
-OneTenthPercentCoverageList = open(basedir + 'result/0.1PercentCoverageList', 'w')
+FivePercentCoverageList = open(basedir + 'result/5PercentCoverageList.txt' , 'w')
+OnePercentCoverageList = open(basedir + 'result/1PercentCoverageList.txt', 'w')
+OneTenthPercentCoverageList = open(basedir + 'result/0.1PercentCoverageList.txt', 'w')
 SNPCounter = open(basedir + 'result/SNPCounter.txt', 'w')
 
 # Counting SNPS with certain coverage
