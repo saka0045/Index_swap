@@ -23,16 +23,17 @@ coverageList = []
 # Parse out frequency and coverage information from all files
 for file in fileList:
     filePath = basedir + file
-    print("Processing file: " + filePath)
-    openFile = open(filePath, 'r')
-    openFile.readline()
-    for line in openFile:
-        line = line.rstrip()
-        frequency = line.split('\t')[7]
-        coverage = line.split('\t')[10]
-        frequencyList.append(frequency)
-        coverageList.append(coverage)
-    openFile.close()
+    if os.path.isfile(filePath):
+        openFile = open(filePath, 'r')
+        print("Processing file: " + filePath)
+        openFile.readline()
+        for line in openFile:
+            line = line.rstrip()
+            frequency = line.split('\t')[7]
+            coverage = line.split('\t')[10]
+            frequencyList.append(frequency)
+            coverageList.append(coverage)
+        openFile.close()
         
 
 # Create result directory inside basedir if it doesn't exist
@@ -55,14 +56,23 @@ for index in range(len(frequencyList)):
     if int(coverageList[index]) >= 100:
         FivePercentCounter += 1
     FivePercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
-    if float(frequencyList[index]) <= 1.0:
+    if float(frequencyList[index]) <= 0.01:
         if int(coverageList[index]) >= 100:
             OnePercentCounter += 1
         OnePercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
-        if float(frequencyList[index]) <= 0.1:
+        if float(frequencyList[index]) <= 0.001:
             if int(coverageList[index]) >= 100:
                 OneTenthPercentCounter += 1
             OneTenthPercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
+
+'''
+for index in range(len(coverageList)):
+    if int(coverageList[index]) >= 100:
+        FivePercentCounter += 1
+        if float(frequencyList[index]) <= 1.0:
+            OnePercentCounter += 1
+            if float(frequencyList[index]) <= 0.1
+'''
 
 SNPCounter.write('SNPs with frequency greater than 5% and coverage greater than 100: ' + str(FivePercentCounter) + '\n'\
                  'SNPs with frequency greater than 1% and coverage greater than 100: ' + str(OnePercentCounter) + '\n'\
