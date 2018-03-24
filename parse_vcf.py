@@ -6,6 +6,11 @@ Created on Tue Feb  6 10:29:13 2018
 @author: m006703
 """
 
+'''
+Script to parse out VCF files annotated with BioR
+will pull out SNPs with gnomAD frequency less than a set value which can be altered below
+'''
+
 import gzip
 import os
 import argparse
@@ -26,6 +31,7 @@ def ParseArgs():
     inputFile = os.path.abspath(args.inputFile)
     outPath = os.path.abspath(args.outPath)
     
+    # Add / at the end if it is not included in the output path
     if outPath.endswith("/"):
         outPath = outPath
     else:
@@ -48,6 +54,7 @@ def ParseVcf(inputFile, outPath):
         
     fileName = outPath + sampleName + '_gnomAD.vcf'
     
+    # Terminate script if the file already exists
     if os.path.isfile(fileName) == True:
         print("The file " + fileName + " already exists. Please delete the file and try again")
         print("Terminating script")
@@ -78,7 +85,7 @@ def ParseVcf(inputFile, outPath):
                 for item in splitinfoline:
                     if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
                         gnomADInfo = float(item.split('=')[1])
-                        if 0 < gnomADInfo <= 0.01: # Cutoff for gnomAD variant frequency
+                        if 0 < gnomADInfo <= 0.05: # Cutoff for gnomAD variant frequency
                             formatlist = result[8].split(':')
                             formatresult = result[9].rstrip().split(':')
                             coverage = formatresult[formatlist.index('DP')]
