@@ -44,13 +44,15 @@ if not os.path.exists(basedir + 'result/'):
 # Creating empty files based on the frequency cutoff    
 FivePercentCoverageList = open(basedir + 'result/5PercentCoverageList.txt' , 'w')
 OnePercentCoverageList = open(basedir + 'result/1PercentCoverageList.txt', 'w')
-OneTenthPercentCoverageList = open(basedir + 'result/0.1PercentCoverageList.txt', 'w')
+OneTenthPercentCoverageList = open(basedir + 'result/OneTenthPercentCoverageList.txt', 'w')
+OneHundrethPercentCoverageList = open(basedir + 'result/OneHundrethCoverageList.txt', 'w')
 SNPCounter = open(basedir + 'result/SNPCounter.txt', 'w')
 
 # Counting SNPS with certain coverage
 FivePercentCounter = 0
 OnePercentCounter = 0
 OneTenthPercentCounter = 0
+OneHundrethPercentCounter = 0
 
 for index in range(len(frequencyList)):
     if int(coverageList[index]) >= 100:
@@ -64,6 +66,10 @@ for index in range(len(frequencyList)):
             if int(coverageList[index]) >= 100:
                 OneTenthPercentCounter += 1
             OneTenthPercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
+            if float(frequencyList[index]) <= 0.0001:
+                if int(coverageList[index]) >= 100:
+                    OneHundrethPercentCounter += 1
+                OneHundrethPercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
 
 '''
 for index in range(len(coverageList)):
@@ -76,7 +82,8 @@ for index in range(len(coverageList)):
 
 SNPCounter.write('SNPs with frequency greater than 5% and coverage greater than 100: ' + str(FivePercentCounter) + '\n'\
                  'SNPs with frequency greater than 1% and coverage greater than 100: ' + str(OnePercentCounter) + '\n'\
-                 'SNPs with frequency greater than 0.1% and cverage greater than 100: ' + str(OneTenthPercentCounter) + '\n')
+                 'SNPs with frequency greater than 0.1% and coverage greater than 100: ' + str(OneTenthPercentCounter) + '\n'\
+                 'SNPs with frequency greater than 0.01% and coverage greater than 100: ' + str(OneHundrethPercentCounter))
 
 FivePercentCoverageList.close()
 OnePercentCoverageList.close()
