@@ -17,8 +17,8 @@ import argparse
 import sys
 
 def main():
-    inputFile, outPath = ParseArgs()
-    outFile = ParseVcf(inputFile, outPath)
+    inputFile, outPath, sampleName = ParseArgs()
+    outFile = ParseVcf(inputFile, outPath, sampleName)
     
     print("Script is done running")
 
@@ -26,10 +26,12 @@ def ParseArgs():
     parser = argparse.ArgumentParser(description="Help Message")
     parser.add_argument("-i", dest="inputFile", required=True, help="Input VCF file")
     parser.add_argument("-o", dest="outPath", required=True, help="Ouput File")
+    parser.add_argument("-n", dest="sampleName", require=True, help="Name of the sample")
     args = parser.parse_args()
     
     inputFile = os.path.abspath(args.inputFile)
     outPath = os.path.abspath(args.outPath)
+    sampleName = args.sampleName
     
     # Add / at the end if it is not included in the output path
     if outPath.endswith("/"):
@@ -37,9 +39,9 @@ def ParseArgs():
     else:
         outPath = outPath + "/"
         
-    return(inputFile, outPath)
+    return(inputFile, outPath, sampleName)
     
-def ParseVcf(inputFile, outPath):
+def ParseVcf(inputFile, outPath, sampleName):
 
     # open files
     vcfFile = gzip.open(inputFile, 'rb')
@@ -48,8 +50,8 @@ def ParseVcf(inputFile, outPath):
     # Go to the header line
     for line in vcfFile:
         if line.startswith('#CHROM'):
-            firstline = line.split('\t')
-            sampleName = firstline[9].rstrip()
+            #firstline = line.split('\t')
+            #sampleName = firstline[9].rstrip()
             break
         
     fileName = outPath + sampleName + '_gnomAD.vcf'
