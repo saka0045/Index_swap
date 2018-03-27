@@ -26,7 +26,7 @@ def ParseArgs():
     parser = argparse.ArgumentParser(description="Help Message")
     parser.add_argument("-i", dest="inputFile", required=True, help="Input VCF file")
     parser.add_argument("-o", dest="outPath", required=True, help="Ouput File")
-    parser.add_argument("-n", dest="sampleName", require=True, help="Name of the sample")
+    parser.add_argument("-n", dest="sampleName", required=True, help="Name of the sample")
     args = parser.parse_args()
     
     inputFile = os.path.abspath(args.inputFile)
