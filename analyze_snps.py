@@ -16,6 +16,7 @@ snpDict = {}
 for file in fileList:
     filePath = basedir + file
     sampleName = file.split('_')[0]
+    shortName = sampleName.split('-')[0]
     if os.path.isfile(filePath):
         openFile = open(filePath, 'r')
         print("Processing file: " + filePath)
@@ -35,10 +36,13 @@ for file in fileList:
                    coverageList.append(coverage)
                    sampleNameList = []
                    sampleNameList.append(sampleName)
-                   snpDict[pos] = [sampleNameList, coverageList, chrom, ref, alt, gnomadFreq]
+                   shortNameList = []
+                   shortNameList.append(shortName)
+                   snpDict[pos] = [sampleNameList, coverageList, chrom, ref, alt, gnomadFreq, shortNameList]
                else:
                    snpDict[pos][0].append(sampleName)
                    snpDict[pos][1].append(coverage)
+                   snpDict[pos][6].append(shortName)
         openFile.close()
         
 resultFile = open(basedir + 'result/snp_analysis.txt', 'w')
@@ -46,8 +50,9 @@ resultFile.write("CHROM\tPOS\tREF\tALT\tgnomADFrequency\tCoverage\tSample\n")
 
 for (key,val) in snpDict.items():
     if len(snpDict[key][0]) > 1:
-        resultFile.write(snpDict[key][2] + '\t' + key + '\t' + snpDict[key][3] + '\t' + snpDict[key][4]\
-                         + '\t' + snpDict[key][5] + '\t' + ','.join(snpDict[key][1]) + '\t'\
-                         + ','.join(snpDict[key][0]) + '\n')
+        if not all(x == snpDict[key][6][0] for x in snpDict[key][6]):
+            resultFile.write(snpDict[key][2] + '\t' + key + '\t' + snpDict[key][3] + '\t' + snpDict[key][4]\
+                             + '\t' + snpDict[key][5] + '\t' + ','.join(snpDict[key][1]) + '\t'\
+                             + ','.join(snpDict[key][0]) + '\n')
         
 resultFile.close()
