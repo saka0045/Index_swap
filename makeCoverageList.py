@@ -42,8 +42,8 @@ if not os.path.exists(basedir + 'result/'):
     os.makedirs(basedir + 'result/')    
 
 # Creating empty files based on the frequency cutoff    
-FivePercentCoverageList = open(basedir + 'result/5PercentCoverageList.txt' , 'w')
-OnePercentCoverageList = open(basedir + 'result/1PercentCoverageList.txt', 'w')
+FivePercentCoverageList = open(basedir + 'result/FivePercentCoverageList.txt' , 'w')
+OnePercentCoverageList = open(basedir + 'result/OnePercentCoverageList.txt', 'w')
 OneTenthPercentCoverageList = open(basedir + 'result/OneTenthPercentCoverageList.txt', 'w')
 OneHundrethPercentCoverageList = open(basedir + 'result/OneHundrethCoverageList.txt', 'w')
 SNPCounter = open(basedir + 'result/SNPCounter.txt', 'w')
