@@ -14,7 +14,8 @@ Assumes that parse_vcf.py fequency cutoff is set at 5%
 import os
 
 # Open all of the files created by parse_vcf.py
-basedir = '/Users/m006703/Index_Swap/files/'
+basedir = '/Users/m006703/Index_Swap/files/' # Replace this with your own directory
+# Gather all of the file names in the above directory and store it in fileList
 fileList = os.listdir(basedir)
 
 frequencyList = []
@@ -35,7 +36,6 @@ for file in fileList:
             coverageList.append(coverage)
         openFile.close()
         
-
 # Create result directory inside basedir if it doesn't exist
 if not os.path.exists(basedir + 'result/'):
     print("result directory does not exist in " + basedir + ", creating directory...")
@@ -71,19 +71,10 @@ for index in range(len(frequencyList)):
                     OneHundrethPercentCounter += 1
                 OneHundrethPercentCoverageList.write(frequencyList[index] + '\t' + coverageList[index] + '\n')
 
-'''
-for index in range(len(coverageList)):
-    if int(coverageList[index]) >= 100:
-        FivePercentCounter += 1
-        if float(frequencyList[index]) <= 1.0:
-            OnePercentCounter += 1
-            if float(frequencyList[index]) <= 0.1
-'''
-
 SNPCounter.write('SNPs with frequency greater than 5% and coverage greater than 100: ' + str(FivePercentCounter) + '\n'\
                  'SNPs with frequency greater than 1% and coverage greater than 100: ' + str(OnePercentCounter) + '\n'\
                  'SNPs with frequency greater than 0.1% and coverage greater than 100: ' + str(OneTenthPercentCounter) + '\n'\
-                 'SNPs with frequency greater than 0.01% and coverage greater than 100: ' + str(OneHundrethPercentCounter))
+                 'SNPs with frequency greater than 0.01% and coverage greater than 100: ' + str(OneHundrethPercentCounter) + '\n')
 
 FivePercentCoverageList.close()
 OnePercentCoverageList.close()

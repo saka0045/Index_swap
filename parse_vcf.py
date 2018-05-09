@@ -11,6 +11,11 @@ Script to parse out VCF files annotated with BioR
 will pull out SNPs with gnomAD frequency less than a set value which can be altered below
 '''
 
+"""
+IMPORTANT!!!
+If using a gzipped file, it will NOT work correctly on a Mac. Needs to be on a Unix/Linux machine
+"""
+
 import gzip
 import os
 import argparse
@@ -43,8 +48,9 @@ def ParseArgs():
     
 def ParseVcf(inputFile, outPath, sampleName):
 
-    # open files
+    # open gzipped file
     vcfFile = gzip.open(inputFile, 'rb')
+    # for files that are not gzipped:
     #vcfFile = open(inputFile, 'r')
     
     # Go to the header line
@@ -61,10 +67,8 @@ def ParseVcf(inputFile, outPath, sampleName):
         print("The file " + fileName + " already exists. Please delete the file and try again")
         print("Terminating script")
         sys.exit()
-    else:
-            
-        outFile = open(outPath + sampleName + '_gnomAD.vcf', 'w')
-        #outFile = open('/Users/m006703/Index_Swap/files/gnomAD.vcf', 'w')       
+    else:            
+        outFile = open(outPath + sampleName + '_gnomAD.vcf', 'w')      
         # Start collecting data after the header line           
         chrom = []
         pos = []
