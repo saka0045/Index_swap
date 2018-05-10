@@ -107,6 +107,23 @@ def ParseVcf(inputFile, outPath, sampleName):
                                 resultformat.append(result[8])
                                 resultmatrix.append(result[9].rstrip())
                                 coveragelist.append(coverage)
+            else:
+                gnomADInfo = 0
+                formatlist = result[8].split(':')
+                formatresult = result[9].rstrip().split(':')
+                coverage = formatresult[formatlist.index('DP')]
+                if result[1] not in pos:
+                    chrom.append(result[0])
+                    pos.append(result[1])
+                    snpid.append(result[2])
+                    ref.append(result[3])
+                    alt.append(result[4])
+                    qual.append(result[5])
+                    qualfilter.append(result[6])
+                    info.append(gnomADInfo)
+                    resultformat.append(result[8])
+                    resultmatrix.append(result[9].rstrip())
+                    coveragelist.append(coverage)
                            
         outFile.write('CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tgnomADINFO\tFORMAT\t\tCOVERAGE\n')
         

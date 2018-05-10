@@ -77,6 +77,13 @@ if not os.path.exists(basedir + 'result/'):
 resultFile = open(basedir + 'result/snp_analysis.txt', 'w')
 resultFile.write("CHROM\tPOS\tREF\tALT\tgnomADFrequency\tCoverage\tFrequency\tSample\n")
 
+# File to report out the coverage and associated frequency of an unfiltered variant for the sample
+coverageAndFrequency = open(basedir + 'result/coverage_and_frequency.txt', 'w')
+coverageAndFrequency.write("Coverage\tFrequency\n")
+
+reportedCoverage = []
+reportedFrequency = []
+
 for (key,val) in snpDict.items():
     if len(snpDict[key][0]) > 1:
         # Only report out variants that are shared across multiple unique family IDs
@@ -86,5 +93,13 @@ for (key,val) in snpDict.items():
                 resultFile.write(snpDict[key][2] + '\t' + key + '\t' + snpDict[key][3] + '\t' + snpDict[key][4]\
                              + '\t' + snpDict[key][5] + '\t' + ','.join(snpDict[key][1]) + '\t'\
                              + ','.join(snpDict[key][7]) + '\t' + ','.join(snpDict[key][0]) + '\n')
+                for reportCov in snpDict[key][1]:
+                    reportedCoverage.append(reportCov)
+                for reportFreq in snpDict[key][7]:
+                    reportedFrequency.append(reportFreq)
+                    
+for index in range(len(reportedCoverage)):
+    coverageAndFrequency.write(reportedFrequency[index] + "\t" + reportedCoverage[index] + "\n")
         
 resultFile.close()
+coverageAndFrequency.close()
