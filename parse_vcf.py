@@ -111,7 +111,10 @@ def ParseVcf(inputFile, outPath, sampleName):
                 gnomADInfo = 0
                 formatlist = result[8].split(':')
                 formatresult = result[9].rstrip().split(':')
-                coverage = formatresult[formatlist.index('DP')]
+                try:
+                    coverage = formatresult[formatlist.index('DP')]
+                except ValueError:
+                    coverage = '0'
                 if result[1] not in pos:
                     chrom.append(result[0])
                     pos.append(result[1])
