@@ -86,10 +86,31 @@ def ParseVcf(inputFile, outPath, sampleName):
         for line in vcfFile:
             result = line.split('\t')
             infoline = result[7]
-            if ('gnomAD_r201_GRCh37.INFO.AF=' or 'gnomAD_r202_GRCh37.INFO.AF=') in infoline:
+            if 'gnomAD_r201_GRCh37.INFO.AF=' in infoline:
                 splitinfoline = infoline.split(';')
                 for item in splitinfoline:
-                    if (item.startswith('gnomAD_r201_GRCh37.INFO.AF=') or item.startswith('gnomAD_r202_GRCh37.INFO.AF=')):
+                    if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
+                        gnomADInfo = float(item.split('=')[1])
+                        if 0 < gnomADInfo <= 0.05: # Cutoff for gnomAD variant frequency
+                            formatlist = result[8].split(':')
+                            formatresult = result[9].rstrip().split(':')
+                            coverage = formatresult[formatlist.index('DP')]
+                            if result[1] not in pos:
+                                chrom.append(result[0])
+                                pos.append(result[1])
+                                snpid.append(result[2])
+                                ref.append(result[3])
+                                alt.append(result[4])
+                                qual.append(result[5])
+                                qualfilter.append(result[6])
+                                info.append(gnomADInfo)
+                                resultformat.append(result[8])
+                                resultmatrix.append(result[9].rstrip())
+                                coveragelist.append(coverage)
+            elif 'gnomAD_r202_GRCh37.INFO.AF=' in infoline:
+                splitinfoline = infoline.split(';')
+                for item in splitinfoline:
+                    if item.startswith('gnomAD_r202_GRCh37.INFO.AF='):
                         gnomADInfo = float(item.split('=')[1])
                         if 0 < gnomADInfo <= 0.05: # Cutoff for gnomAD variant frequency
                             formatlist = result[8].split(':')
