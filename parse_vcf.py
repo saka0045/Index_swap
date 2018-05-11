@@ -86,10 +86,10 @@ def ParseVcf(inputFile, outPath, sampleName):
         for line in vcfFile:
             result = line.split('\t')
             infoline = result[7]
-            if 'gnomAD_r201_GRCh37.INFO.AF=' in infoline:
+            if ('gnomAD_r201_GRCh37.INFO.AF=' or 'gnomAD_r202_GRCh37.INFO.AF=') in infoline:
                 splitinfoline = infoline.split(';')
                 for item in splitinfoline:
-                    if item.startswith('gnomAD_r201_GRCh37.INFO.AF='):
+                    if (item.startswith('gnomAD_r201_GRCh37.INFO.AF=') or item.startswith('gnomAD_r202_GRCh37.INFO.AF=')):
                         gnomADInfo = float(item.split('=')[1])
                         if 0 < gnomADInfo <= 0.05: # Cutoff for gnomAD variant frequency
                             formatlist = result[8].split(':')
