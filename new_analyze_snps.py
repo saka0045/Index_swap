@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 26 21:16:31 2018
+Created on Fri May 18 09:30:57 2018
 
 @author: m006703
-
-This script takes all of the filtered VCF files from parse_vcf.py and
-compile the variants that are seen accross multiple samples that are not
-related to one another.
 """
 
 import os
@@ -18,6 +14,7 @@ fileList = os.listdir(basedir)
 
 # Create snp dictionary for all files in the filePath
 snpDict = {}
+sampleList = []
 for file in fileList:
     filePath = basedir + file
     sampleName = file.split('_')[0]
@@ -25,6 +22,7 @@ for file in fileList:
     shortName = sampleName.split('-')[0]
     # Only open if it is a file and not a directory
     if os.path.isfile(filePath):
+        sampleList.append(sampleName)
         openFile = open(filePath, 'r')
         print("Processing file: " + filePath)
         # Ignore the header
@@ -71,43 +69,31 @@ for file in fileList:
 # Create result directory inside basedir if it doesn't exist
 if not os.path.exists(basedir + 'result/'):
     print("result directory does not exist in " + basedir + ", creating directory...")
-    os.makedirs(basedir + 'result/')  
+    os.makedirs(basedir + 'result/')
 
-# Write out results
-resultFile = open(basedir + 'result/snp_analysis.txt', 'w')
-resultFile.write("CHROM\tPOS\tREF\tALT\tgnomADFrequency\tCoverage\tFrequency\tSample\n")
+# Make files with sample names in column headers and variant location in row header
+# with variant frequencies and coverage for those variants    
+freqFile = open(basedir + 'result/sharedVariantFreq.txt', 'w')
+coverageFile = open(basedir+ 'result/sharedVariantCoverage.txt', 'w')
+freqFile.write("Variant_Position\t" + '\t'.join(sampleList) + '\n')
+coverageFile.write("Variant_Position\t" + '\t'.join(sampleList) + '\n')
 
-# File to report out the coverage and associated frequency of an unfiltered variant for the sample
-coverageAndFrequency = open(basedir + 'result/coverage_and_frequency.txt', 'w')
-coverageAndFrequency.write("Coverage\tFrequency\n")
+# Iterate through all the variants and record the respective values for the samples if it exists
+for (key, val) in snpDict.items():
+    freqFile.write("chr" + snpDict[key][2] + ":" + key + '\t')
+    coverageFile.write("chr" + snpDict[key][2] + ":" + key + '\t')
+    for sample in sampleList:
+        if sample in snpDict[key][0]:
+            sampleIndex = snpDict[key][0].index(sample)
+            freqFile.write(snpDict[key][7][sampleIndex] + '\t')
+            coverageFile.write(snpDict[key][1][sampleIndex] + '\t')
+        else:
+            freqFile.write("0\t")
+            coverageFile.write("0\t")
+    freqFile.write('\n')
+    coverageFile.write('\n')
+    
+freqFile.close()
+coverageFile.close()
 
-# Shortened result file for variants shared with less than or equal to 4 samples
-shortResultFile = open(basedir + 'result/short_snp_analysis.txt', 'w')
-shortResultFile.write("CHROM\tPOS\tREF\tALT\tgnomADFrequency\tCoverage\tFrequency\tSample\n")
-
-reportedCoverage = []
-reportedFrequency = []
-
-for (key,val) in snpDict.items():
-    if len(snpDict[key][0]) > 1:
-        # Only report out variants that are shared across multiple unique family IDs
-        if not all(x == snpDict[key][6][0] for x in snpDict[key][6]):
-            # At least one sample need to have coverage greater than or equal to 30 and allele frequency greater than or equal to 0.2
-            if (max(map(int, snpDict[key][1])) >= 30 and max(map(float, snpDict[key][7])) >= 0.2):
-                resultFile.write(snpDict[key][2] + '\t' + key + '\t' + snpDict[key][3] + '\t' + snpDict[key][4]\
-                             + '\t' + snpDict[key][5] + '\t' + ','.join(snpDict[key][1]) + '\t'\
-                             + ','.join(snpDict[key][7]) + '\t' + ','.join(snpDict[key][0]) + '\n')
-                if len(snpDict[key][0]) <= 4:
-                    shortResultFile.write(snpDict[key][2] + '\t' + key + '\t' + snpDict[key][3] + '\t' + snpDict[key][4]\
-                             + '\t' + snpDict[key][5] + '\t' + ','.join(snpDict[key][1]) + '\t'\
-                             + ','.join(snpDict[key][7]) + '\t' + ','.join(snpDict[key][0]) + '\n')
-                for reportCov in snpDict[key][1]:
-                    reportedCoverage.append(reportCov)
-                for reportFreq in snpDict[key][7]:
-                    reportedFrequency.append(reportFreq)
-                    
-for index in range(len(reportedCoverage)):
-    coverageAndFrequency.write(reportedFrequency[index] + "\t" + reportedCoverage[index] + "\n")
-        
-resultFile.close()
-coverageAndFrequency.close()
+print("Script is done running")
