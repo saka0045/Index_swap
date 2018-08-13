@@ -9,7 +9,7 @@ Created on Fri May 18 09:30:57 2018
 import os
 
 # Open all of the files created by parse_vcf.py
-basedir = '/Users/m006703/Index_Swap/files/Probands_Only/' #Replace this with your own directory
+basedir = '/Users/m006703/Index_Swap/HiSeq4000/HNFC3BBXX/' #Replace this with your own directory
 fileList = os.listdir(basedir)
 
 # Create snp dictionary for all files in the filePath
